@@ -17,7 +17,6 @@ class CreateUsersTable extends Migration
             $table->bigIncrements('id');
             $table->string('sub'); // ユーザーID
             $table->string('name'); // ユーザー名
-            $table->string('picture'); // プロフィール画像URL
             $table->timestamps();
         });
     }

@@ -15,7 +15,10 @@
 Route::get('/line_auth', 'LineLoginController@lineLogin')->name('line.login');
 Route::get('/top/line_auth', 'LineLoginController@handleLineCallback')->name('auth.line_callback');
 
+// Googleログイン
+Route::get('/auth/google', 'Auth\LoginController@redirectToGoogle')->name('google.login');
+Route::get('/auth/google/callback', 'Auth\LoginController@handleGoogleCallback')->name('auth.google_callback');
+
 Route::get('/', 'TopController@index')->name('top');
 
 Route::resource('posts', 'PostsController');
-

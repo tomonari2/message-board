@@ -34,4 +34,10 @@ return [
         'secret' => env('SPARKPOST_SECRET'),
     ],
 
+    'google' => [
+        'client_id' => env('GOOGLE_KEY'),
+        'client_secret' => env('GOOGLE_SECRET'),
+        'redirect' => '/auth/google/callback',
+    ],
+
 ];
