@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/posts';
 
     /**
      * Create a new controller instance.
@@ -48,12 +48,16 @@ class LoginController extends Controller
     public function handleGoogleCallback()
     {
         $user = Socialite::driver('google')->user();
-        // dd($user);
 
-        $user = User::firstOrCreate(['sub' =>  $user->user['sub'],'name' => $user->name]);
+        $user = User::firstOrCreate(['sub' =>  $user->user['sub'], 'name' => $user->name]);
 
         Auth::login($user);
+        return redirect()->route('posts.index');
+    }
 
-        return redirect()->to(route('posts.index'));
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('top'); // ログアウト後にリダイレクトするページを指定します
     }
 }
