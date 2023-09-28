@@ -9,6 +9,13 @@ use GuzzleHttp\Client;
 
 class LineLoginController extends Controller
 {
+    /**
+     * LINEログイン認可プロセスを開始する。
+     * ユーザーがログイン済みならマイページに遷移する。
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function lineLogin()
     {
         // すでにユーザーがログイン済みの場合
@@ -31,6 +38,12 @@ class LineLoginController extends Controller
         return redirect()->to($authorizationUrl);
     }
 
+    /**
+     * LINEログインの認可レスポンスを処理し、UIDを取得してログインする。
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function handleLineCallback(Request $request)
     {
         if ($request->query('state') !== session('state')) {
@@ -59,12 +72,12 @@ class LineLoginController extends Controller
 
         $response = $client->post('https://api.line.me/oauth2/v2.1/userinfo', [
             'headers' => [
-                'Authorization' => 'Bearer '. $parsedResponse['access_token'],
+                'Authorization' => 'Bearer ' . $parsedResponse['access_token'],
             ],
         ]);
 
-         // レスポンスボディを取得
-         $responseData = $response->getBody()->getContents();
+        // レスポンスボディを取得
+        $responseData = $response->getBody()->getContents();
 
         // レスポンスデータを処理する（例: JSONデコードなど）
         $parsedResponse = json_decode($responseData, true);
