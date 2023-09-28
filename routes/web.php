@@ -23,4 +23,6 @@ Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/', 'TopController@index')->name('top');
 
-Route::resource('posts', 'PostsController');
+Route::middleware('auth')->group(function () {
+    Route::resource('posts', 'PostsController');
+});
