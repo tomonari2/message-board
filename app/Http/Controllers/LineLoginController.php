@@ -11,7 +11,10 @@ class LineLoginController extends Controller
 {
     public function lineLogin()
     {
-        
+        // すでにユーザーがログイン済みの場合
+        if (Auth::check()) {
+            return redirect()->route('posts.index');
+        }
 
         $state = bin2hex(random_bytes(32));
         session(['state' => $state]);

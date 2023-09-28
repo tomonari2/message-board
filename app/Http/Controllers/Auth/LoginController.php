@@ -42,6 +42,11 @@ class LoginController extends Controller
 
     public function redirectToGoogle()
     {
+        // すでにユーザーがログイン済みの場合
+        if (Auth::check()) {
+            return redirect()->route('posts.index');
+        }
+        
         return Socialite::driver('google')->redirect();
     }
 
