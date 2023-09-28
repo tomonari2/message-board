@@ -1,21 +1,17 @@
-<!DOCTYPE html>
-<html lang="ja">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-
-    <title>掲示板</title>
-</head>
-
-<body>
-    TOPページ
-    <!-- LINEログインボタン -->
-    <a href="{{ route('line.login') }}">
-        LINEログイン
-    </a>
-    <a href="{{ route('google.login') }}">
-        Googleログイン
-    </a>
-</body>
-
-</html>
+@section('content')
+<div class="container text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">掲示板ログイン</div>
+                <div class="card-body">
+                    <a href="{{ route('line.login') }}" class="btn btn-primary btn-lg btn-block mb-3">LINEログイン</a>
+                    <a href="{{ route('google.login') }}" class="btn btn-danger btn-lg btn-block">Googleログイン</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
