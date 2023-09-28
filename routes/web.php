@@ -26,3 +26,5 @@ Route::get('/', 'TopController@index')->name('top');
 Route::middleware('auth')->group(function () {
     Route::resource('posts', 'PostsController');
 });
+
+Route::post('business_card/extract', 'VisionController@analyzeImage');
