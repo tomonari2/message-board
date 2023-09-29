@@ -27,4 +27,4 @@ Route::middleware('auth')->group(function () {
     Route::resource('posts', 'PostsController');
 });
 
-Route::post('business_card/extract', 'VisionController@analyzeImage');
+Route::post('/vision', 'VisionController@analyzeImage')->name('vision.analyzeImage');

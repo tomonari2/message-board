@@ -30,6 +30,12 @@
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger">削除</button>
                 </form>
+                <form method="POST" action="{{ route('vision.analyzeImage') }}" enctype="multipart/form-data">
+                    @csrf
+                    {{-- <input type="file" name="image"> --}}
+                    <input type="hidden" name="image_path" value="{{ $post->image_path }}">
+                    <button type="submit">画像解析</button>
+                </form>
             </li>
         @endforeach
     </ul>
