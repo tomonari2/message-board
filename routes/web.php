@@ -11,6 +11,23 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcom');
+
+
+//LINEログイン
+Route::get('/line_auth', 'LineLoginController@lineLogin')->name('line.login');
+Route::get('/top/line_auth', 'LineLoginController@handleLineCallback')->name('auth.line_callback');
+
+// Googleログイン
+Route::get('/auth/google', 'Auth\LoginController@redirectToGoogle')->name('google.login');
+Route::get('/auth/google/callback', 'Auth\LoginController@handleGoogleCallback')->name('auth.google_callback');
+
+Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+
+Route::get('/', 'TopController@index')->name('top');
+
+Route::middleware('auth')->group(function () {
+    Route::resource('posts', 'PostsController');
+
 });
+
+Route::post('/vision', 'VisionController@analyzeImage')->name('vision.analyzeImage');
