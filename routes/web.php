@@ -31,3 +31,4 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/vision', 'VisionController@analyzeImage')->name('vision.analyzeImage');
+Route::get('/vision2', 'VisionController@vision2')->name('vision2');
