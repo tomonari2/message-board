@@ -15,6 +15,14 @@
         </div>
         <button type="submit" class="btn btn-primary">投稿</button>
     </form>
+    <form method="POST" action="{{ route('upload.submit') }}" enctype="multipart/form-data">
+        @csrf
+        <div class="form-group">
+            <label for="file">ファイルを選択:</label>
+            <input type="file" name="file" id="file" class="form-control-file">
+        </div>
+        <button type="submit" class="btn btn-primary">アップロード</button>
+    </form>
 
     <h1 class="mt-4">投稿一覧</h1>
 
