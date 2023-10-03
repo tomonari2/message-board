@@ -43,55 +43,38 @@ class Google
 
     public function uploadImageToGoogleDrive()
     {
-        try {
-            // $imagePath = asset('images/1695884174.webp');
-            // $mime = mime_content_type($imagePath);
-            // $imageUrl = asset('images/1695884174.webp');
-            // $mime = mime_content_type(public_path('images/1695884174.webp'));
-            // $imageData = file_get_contents(public_path('images/1695884174.webp'));
-            // $base64Image = base64_encode($imageData);
-
-            // $headers = [
-            //     'Authorization' => 'Bearer ' . session('access_token'),
-            //     'Content-Type' => 'image/'.$mime,
-            // ];
-
-            // $client = new Client(['base_uri' => config('const.google_api_url')]);
-
-            // $response = $client->request('POST', 'upload/drive/v3/files?uploadType=media', [
-            //     'headers' => $headers,
-            //     'body' => $base64Image,
-            // ]);
             $filePath = public_path('images/1695884174.webp');
-            dd(mime_content_type($filePath));
+            $mimetype = mime_content_type($filePath);
 
             $headers = [
                 'Authorization' => 'Bearer ' . session('access_token'),
-                'Content-Type' => mime_content_type($filePath),
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
             ];
+
+            $fileContents = file_get_contents($filePath);
+
+            $body = <<<EOF
+            --foo_bar_baz
+            Content-Type: application/json; charset=UTF-8
+
+            {
+              "name": "画像の説明文を入れるとこ"
+            }
+
+            --foo_bar_baz
+            Content-Type: {$mimetype}
+
+            {$fileContents}
+            --foo_bar_baz--
+            EOF;
 
             $client = new Client(['base_uri' => config('const.google_api_url')]);
 
-            $response = $client->request('POST', 'upload/drive/v3/files?uploadType=media', [
+            $response = $client->request('POST', 'upload/drive/v3/files?uploadType=multipart', [
                 'headers' => $headers,
-                'body' => fopen($filePath, 'r'), // ファイルをストリームとして送信
+                'body' => $body,
             ]);
 
-            dd($response->getBody());
-
-            $responseData = json_decode($response->getBody(), true);
-
-            if (isset($responseData['id'])) {
-                $fileId = $responseData['id'];
-                echo "File ID: $fileId\n";
-                return $fileId;
-            } else {
-                echo "File upload failed.\n";
-                return null;
-            }
-        } catch (Exception $e) {
-            echo "Error Message: " . $e->getMessage();
-            return null;
-        }
+            dd($response);
     }
 }
