@@ -21,8 +21,6 @@ Route::get('/top/line_auth', 'LineLoginController@handleLineCallback')->name('au
 Route::get('/auth/google', 'Auth\LoginController@redirectToGoogle')->name('google.login');
 Route::get('/auth/google/callback', 'Auth\LoginController@handleGoogleCallback')->name('auth.google_callback');
 
-Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
-
 Route::get('/', 'TopController@index')->name('top');
 
 Route::middleware('auth')->group(function () {
@@ -31,7 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/callback', 'GoogleDriveImageController@handleGoogleCallback')->name('google.callback');
     Route::post('/store', 'GoogleDriveImageController@store')->name('drive.store');
     Route::get('/index', 'GoogleDriveImageController@index')->name('drive.index');
-});
 
-Route::post('/vision', 'VisionController@analyzeImage')->name('vision.analyzeImage');
-Route::get('/vision2', 'VisionController@vision2')->name('vision2');
+    Route::post('/vision', 'VisionController@analyzeImage')->name('vision.analyzeImage');
+    Route::get('/vision2', 'VisionController@vision2')->name('vision2');
+
+    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+});
