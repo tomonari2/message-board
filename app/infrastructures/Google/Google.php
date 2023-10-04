@@ -3,7 +3,6 @@
 namespace App\Infrastructures\Google;
 
 use GuzzleHttp\Client;
-use Illuminate\Http\File;
 
 class Google
 {
@@ -95,7 +94,6 @@ class Google
             'headers' => $headers,
         ]);
         $data = json_decode($response->getBody(), true);
-        dd($data);
-        dd($response);
+        return $data['files'];
     }
 }

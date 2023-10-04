@@ -34,7 +34,7 @@ Route::post('/vision', 'VisionController@analyzeImage')->name('vision.analyzeIma
 Route::get('/vision2', 'VisionController@vision2')->name('vision2');
 
 
-Route::get('/authorize', 'GoogleDriveController@getAuthorizationUrl')->name('google.authorize');
-Route::get('/callback', 'GoogleDriveController@handleGoogleCallback')->name('google.callback');
-Route::post('/store', 'GoogleDriveController@store')->name('drive.store');
-Route::get('/download', 'GoogleDriveController@download')->name('download');
+Route::get('/authorize', 'GoogleDriveImageController@getAuthorizationUrl')->name('google.authorize');
+Route::get('/callback', 'GoogleDriveImageController@handleGoogleCallback')->name('google.callback');
+Route::post('/store', 'GoogleDriveImageController@store')->name('drive.store');
+Route::get('/index', 'GoogleDriveImageController@index')->name('drive.index');

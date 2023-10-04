@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Google;
-use GuzzleHttp\Client;
 use Log;
 
-class GoogleDriveController extends Controller
+class GoogleDriveImageController extends Controller
 {
     /**Googleドライブでユーザーに付与を依頼する権限 */
     protected string $scope = 'https://www.googleapis.com/auth/drive';
@@ -18,7 +17,7 @@ class GoogleDriveController extends Controller
 
         session(['access_token' => $accessToken]);
 
-        return redirect()->action('GoogleDriveController@store');
+        return redirect()->action('GoogleDriveImageController@store');
     }
 
     public function store(Request $request)
@@ -46,29 +45,13 @@ class GoogleDriveController extends Controller
         return redirect()->to($authorizationUrl);
     }
 
-    public function download()
+    public function index(Request $request)
     {
-        Google::searchFiles();
-        // ダウンロードAPIエンドポイント
-        $downloadUrl = "https://www.googleapis.com/drive/v3/files/{$fileId}?alt=media";
+        // session()->forget('access_token');
+        $imageList = Google::searchFiles();
 
-        // アクセストークン
-        $accessToken = 'YOUR_ACCESS_TOKEN'; // 本来はアクセストークンを取得する必要があります
+        $user = $request->user();
 
-        // Guzzleを使用してファイルをダウンロード
-        $client = new Client();
-        $response = $client->get($downloadUrl, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-            ],
-        ]);
-
-        // ファイルをブラウザに送信
-        $headers = [
-            'Content-Type' => $response->getHeaderLine('Content-Type'),
-            'Content-Disposition' => 'inline; filename="downloaded_image.jpg"',
-        ];
-
-        return response($response->getBody(), 200, $headers);
+        return view('posts.index', compact('user', 'posts', 'imageList'));
     }
 }
