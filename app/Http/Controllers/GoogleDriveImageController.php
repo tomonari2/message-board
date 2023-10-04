@@ -52,6 +52,6 @@ class GoogleDriveImageController extends Controller
 
         $user = $request->user();
 
-        return view('posts.index', compact('user', 'posts', 'imageList'));
+        return view('google_drive_images.index', compact('user', 'imageList'));
     }
 }
