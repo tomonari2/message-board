@@ -36,5 +36,5 @@ Route::get('/vision2', 'VisionController@vision2')->name('vision2');
 
 Route::get('/authorize', 'GoogleDriveController@getAuthorizationUrl')->name('google.authorize');
 Route::get('/callback', 'GoogleDriveController@handleGoogleCallback')->name('google.callback');
-Route::post('/upload', 'GoogleDriveController@upload')->name('upload.submit');
-Route::get('/download/{fileId}', 'GoogleDriveController@download')->name('download');
+Route::post('/store', 'GoogleDriveController@store')->name('drive.store');
+Route::get('/download', 'GoogleDriveController@download')->name('download');

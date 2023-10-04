@@ -3,6 +3,7 @@
 namespace App\Infrastructures\Google;
 
 use GuzzleHttp\Client;
+use Illuminate\Http\File;
 
 class Google
 {
@@ -41,9 +42,9 @@ class Google
         return $accessToken;
     }
 
-    public function uploadImageToGoogleDrive()
+    public function uploadImageToGoogleDrive(string $tempPath, string $description)
     {
-        $filePath = public_path('images/1695884174.webp');
+        $filePath = storage_path('app/'.$tempPath);
         $mimetype = mime_content_type($filePath);
 
         $headers = [
@@ -59,7 +60,7 @@ class Google
 
             {
               "name": "画像の説明文を入れるとこ",
-              "description": "ファイルの説明",
+              "description": "{$description}",
               "parents": ["1ZKzyMAiEfx7Ispwpd8lYqwhe83jmOi3e"]
             }
 

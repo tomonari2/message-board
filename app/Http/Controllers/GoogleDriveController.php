@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Google;
 use GuzzleHttp\Client;
+use Log;
 
 class GoogleDriveController extends Controller
 {
@@ -17,29 +18,37 @@ class GoogleDriveController extends Controller
 
         session(['access_token' => $accessToken]);
 
-        return redirect()->action('GoogleDriveController@upload');
+        return redirect()->action('GoogleDriveController@store');
     }
 
-    public function upload(Request $request)
+    public function store(Request $request)
     {
         if (!session('access_token')) {
             return $this->redirectToGoogleAuthorizationUrl();
         }
+        // dd('b');
 
-        Google::uploadImageToGoogleDrive();
+        $uploadedFile = $request->file('file'); // リクエストからファイルを取得
+
+        if ($uploadedFile) {
+            $tempPath = $uploadedFile->store('temp'); // ファイルを一時的に保存
+        }
+
+        Google::uploadImageToGoogleDrive($tempPath, $request->description);
     }
 
     private function redirectToGoogleAuthorizationUrl()
     {
         $authorizationUrl = Google::getAuthorizationUrl($this->scope);
 
-        // Log::info('LINE Login authorization request', [$authorizationUrl]);
+        Log::info('LINE Login authorization request', [$authorizationUrl]);
 
         return redirect()->to($authorizationUrl);
     }
 
-    public function download($fileId)
+    public function download()
     {
+        Google::searchFiles();
         // ダウンロードAPIエンドポイント
         $downloadUrl = "https://www.googleapis.com/drive/v3/files/{$fileId}?alt=media";
 
