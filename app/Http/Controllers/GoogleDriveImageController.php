@@ -17,7 +17,7 @@ class GoogleDriveImageController extends Controller
 
         session(['access_token' => $accessToken]);
 
-        return redirect()->action('GoogleDriveImageController@store');
+        return redirect()->action('GoogleDriveImageController@index');
     }
 
     public function store(Request $request)
@@ -25,7 +25,6 @@ class GoogleDriveImageController extends Controller
         if (!session('access_token')) {
             return $this->redirectToGoogleAuthorizationUrl();
         }
-        // dd('b');
 
         $uploadedFile = $request->file('file'); // リクエストからファイルを取得
 
@@ -47,7 +46,10 @@ class GoogleDriveImageController extends Controller
 
     public function index(Request $request)
     {
-        // session()->forget('access_token');
+        if (!session('access_token')) {
+            return $this->redirectToGoogleAuthorizationUrl();
+        }
+
         $imageList = Google::searchFiles();
 
         $user = $request->user();
