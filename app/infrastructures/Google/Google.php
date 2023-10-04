@@ -43,22 +43,24 @@ class Google
 
     public function uploadImageToGoogleDrive()
     {
-            $filePath = public_path('images/1695884174.webp');
-            $mimetype = mime_content_type($filePath);
+        $filePath = public_path('images/1695884174.webp');
+        $mimetype = mime_content_type($filePath);
 
-            $headers = [
-                'Authorization' => 'Bearer ' . session('access_token'),
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ];
+        $headers = [
+            'Authorization' => 'Bearer ' . session('access_token'),
+            'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+        ];
 
-            $fileContents = file_get_contents($filePath);
+        $fileContents = file_get_contents($filePath);
 
-            $body = <<<EOF
+        $body = <<<EOF
             --foo_bar_baz
             Content-Type: application/json; charset=UTF-8
 
             {
-              "name": "画像の説明文を入れるとこ"
+              "name": "画像の説明文を入れるとこ",
+              "description": "ファイルの説明",
+              "parents": ["1ZKzyMAiEfx7Ispwpd8lYqwhe83jmOi3e"]
             }
 
             --foo_bar_baz
@@ -68,13 +70,31 @@ class Google
             --foo_bar_baz--
             EOF;
 
-            $client = new Client(['base_uri' => config('const.google_api_url')]);
+        $client = new Client(['base_uri' => config('const.google_api_url')]);
 
-            $response = $client->request('POST', 'upload/drive/v3/files?uploadType=multipart', [
-                'headers' => $headers,
-                'body' => $body,
-            ]);
+        $response = $client->request('POST', 'upload/drive/v3/files?uploadType=multipart', [
+            'headers' => $headers,
+            'body' => $body,
+        ]);
 
-            dd($response);
+        dd($response);
+    }
+
+    public function searchFiles()
+    {
+        $client = new Client(['base_uri' => config('const.google_api_url')]);
+
+        $folderId = '1ZKzyMAiEfx7Ispwpd8lYqwhe83jmOi3e';
+
+        $headers = [
+            'Authorization' => 'Bearer ' . session('access_token'),
+        ];
+
+        $response = $client->request('GET', 'drive/v3/files?q=\'' . $folderId . '\' in parents', [
+            'headers' => $headers,
+        ]);
+        $data = json_decode($response->getBody(), true);
+        dd($data);
+        dd($response);
     }
 }
