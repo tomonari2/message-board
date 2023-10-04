@@ -28,13 +28,10 @@ Route::get('/', 'TopController@index')->name('top');
 Route::middleware('auth')->group(function () {
     Route::resource('posts', 'PostsController');
 
+    Route::get('/callback', 'GoogleDriveImageController@handleGoogleCallback')->name('google.callback');
+    Route::post('/store', 'GoogleDriveImageController@store')->name('drive.store');
+    Route::get('/index', 'GoogleDriveImageController@index')->name('drive.index');
 });
 
 Route::post('/vision', 'VisionController@analyzeImage')->name('vision.analyzeImage');
 Route::get('/vision2', 'VisionController@vision2')->name('vision2');
-
-
-Route::get('/authorize', 'GoogleDriveImageController@getAuthorizationUrl')->name('google.authorize');
-Route::get('/callback', 'GoogleDriveImageController@handleGoogleCallback')->name('google.callback');
-Route::post('/store', 'GoogleDriveImageController@store')->name('drive.store');
-Route::get('/index', 'GoogleDriveImageController@index')->name('drive.index');
