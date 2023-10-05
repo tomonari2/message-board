@@ -9,12 +9,12 @@ class Google
     public function getAuthorizationUrl(string $scope)
     {
         $authorizationUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' . http_build_query([
-            'scope' => $scope,
-            'access_type' => 'offline',
-            'include_granted_scope' => 'true',
-            'response_type' => 'code',
-            'redirect_uri' => route('google.callback'),
             'client_id' => '659912505482-nadr0n90ju001qgbbkk0775hfv3o9muk.apps.googleusercontent.com',
+            'redirect_uri' => route('google.callback'),
+            'response_type' => 'code',
+            'scope' => $scope,
+            // 'access_type' => 'offline',//更新トークンが必要な場合
+            // 'prompt' => 'consent',//同意画面を毎回表示
         ]);
 
         return $authorizationUrl;
@@ -31,7 +31,6 @@ class Google
                 'client_secret' => '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',
                 'redirect_uri' => route('google.callback'),
                 'grant_type' => 'authorization_code',
-                'access_type' => 'offline',
             ],
         ]);
 
@@ -40,6 +39,27 @@ class Google
         $accessToken = $data['access_token'];
         return $accessToken;
     }
+
+    // public function getGoogleDriveRefreshToken(string $code)
+    // {
+    //     $client = new Client(['base_uri' => 'https://oauth2.googleapis.com']);
+
+    //     $response = $client->request('POST', 'token', [
+    //         'form_params' => [
+    //             'code' => $code,
+    //             'client_id' => '659912505482-nadr0n90ju001qgbbkk0775hfv3o9muk.apps.googleusercontent.com',
+    //             'client_secret' => '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',
+    //             'redirect_uri' => route('google.callback'),
+    //             'grant_type' => 'authorization_code',
+    //         ],
+    //     ]);
+
+    //     // アクセストークンを取得
+    //     $data = json_decode($response->getBody(), true);
+
+    //     $accessToken = $data['access_token'];
+    //     return $accessToken;
+    // }
 
     public function uploadImageToGoogleDrive(string $tempPath, string $description)
     {
@@ -77,7 +97,7 @@ class Google
             'body' => $body,
         ]);
 
-        dd($response);
+        return;
     }
 
     public function searchFiles()

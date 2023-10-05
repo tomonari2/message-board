@@ -4,20 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Google;
-use Log;
 
 class GoogleDriveImageController extends Controller
 {
     /**Googleドライブでユーザーに付与を依頼する権限 */
     protected string $scope = 'https://www.googleapis.com/auth/drive';
 
-    public function handleGoogleCallback(Request $request)
+    public function index(Request $request)
     {
-        $accessToken = Google::getGoogleDriveAccessToken($request->query('code'));
+        // dd(session('access_token'));
+        return $this->redirectToGoogleAuthorizationUrl();
 
-        session(['access_token' => $accessToken]);
+        if (!session('access_token')) {
+            return $this->redirectToGoogleAuthorizationUrl();
+        }
 
-        return redirect()->action('GoogleDriveImageController@index');
+        $imageList = Google::searchFiles();
+
+        $user = $request->user();
+
+        return view('google_drive_images.index', compact('user', 'imageList'));
     }
 
     public function store(Request $request)
@@ -33,27 +39,26 @@ class GoogleDriveImageController extends Controller
         }
 
         Google::uploadImageToGoogleDrive($tempPath, $request->description);
+        return redirect()->action('GoogleDriveImageController@index');
+
     }
 
     private function redirectToGoogleAuthorizationUrl()
     {
         $authorizationUrl = Google::getAuthorizationUrl($this->scope);
 
-        Log::info('LINE Login authorization request', [$authorizationUrl]);
-
         return redirect()->to($authorizationUrl);
     }
 
-    public function index(Request $request)
+    public function handleGoogleCallback(Request $request)
     {
-        if (!session('access_token')) {
-            return $this->redirectToGoogleAuthorizationUrl();
-        }
+        //更新トークンを取得
+        // $accessToken=Google::getGoogleDriveRefreshToken($request->query('code'));
 
-        $imageList = Google::searchFiles();
+        $accessToken = Google::getGoogleDriveAccessToken($request->query('code'));
 
-        $user = $request->user();
+        session(['access_token' => $accessToken]);
 
-        return view('google_drive_images.index', compact('user', 'imageList'));
+        return redirect()->action('GoogleDriveImageController@index');
     }
 }
