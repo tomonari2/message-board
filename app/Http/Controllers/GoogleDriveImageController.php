@@ -12,10 +12,7 @@ class GoogleDriveImageController extends Controller
 
     public function index(Request $request)
     {
-        // dd(session('access_token'));
-        return $this->redirectToGoogleAuthorizationUrl();
-
-        if (!session('access_token')) {
+        if (!session('access_token') || session('expirationDateTime') < now()) {
             return $this->redirectToGoogleAuthorizationUrl();
         }
 
@@ -28,7 +25,7 @@ class GoogleDriveImageController extends Controller
 
     public function store(Request $request)
     {
-        if (!session('access_token')) {
+        if (!session('access_token') || session('expirationDateTime') < now()) {
             return $this->redirectToGoogleAuthorizationUrl();
         }
 
@@ -40,7 +37,6 @@ class GoogleDriveImageController extends Controller
 
         Google::uploadImageToGoogleDrive($tempPath, $request->description);
         return redirect()->action('GoogleDriveImageController@index');
-
     }
 
     private function redirectToGoogleAuthorizationUrl()

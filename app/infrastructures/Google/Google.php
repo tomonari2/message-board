@@ -2,6 +2,7 @@
 
 namespace App\Infrastructures\Google;
 
+use Carbon\Carbon;
 use GuzzleHttp\Client;
 
 class Google
@@ -36,6 +37,11 @@ class Google
 
         // アクセストークンを取得
         $data = json_decode($response->getBody(), true);
+        $carbon = new Carbon(now());
+        $carbon->addSeconds($data['expires_in']);
+        $expirationDateTime = $carbon->toDateTimeString();
+        session(['expirationDateTime' => $expirationDateTime]);
+        
         $accessToken = $data['access_token'];
         return $accessToken;
     }
@@ -63,7 +69,7 @@ class Google
 
     public function uploadImageToGoogleDrive(string $tempPath, string $description)
     {
-        $filePath = storage_path('app/'.$tempPath);
+        $filePath = storage_path('app/' . $tempPath);
         $mimetype = mime_content_type($filePath);
 
         $headers = [
