@@ -86,6 +86,6 @@ class LineLoginController extends Controller
 
         Auth::login($user);
 
-        return redirect()->to(route('posts.index'));
+        return redirect()->to(route('drive.index'));
     }
 }
