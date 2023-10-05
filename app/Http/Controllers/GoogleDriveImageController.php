@@ -29,8 +29,8 @@ class GoogleDriveImageController extends Controller
             return $this->redirectToGoogleAuthorizationUrl();
         }
 
-        $uploadedFile = $request->file('file'); // リクエストからファイルを取得
-
+        $uploadedFile = $request->files->get("fileInput"); // リクエストからファイルを取得
+        dd($uploadedFile);
         if ($uploadedFile) {
             $tempPath = $uploadedFile->store('temp'); // ファイルを一時的に保存
         }
