@@ -102,8 +102,9 @@ class Google
             'headers' => $headers,
             'body' => $body,
         ]);
+        $data = json_decode($response->getBody(), true);
 
-        return;
+        return $data['id'];
     }
 
     public function searchFiles()

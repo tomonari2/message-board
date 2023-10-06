@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Google;
+use Log;
 
 class GoogleDriveImageController extends Controller
 {
@@ -25,18 +26,25 @@ class GoogleDriveImageController extends Controller
 
     public function store(Request $request)
     {
+
         if (!session('access_token') || session('expirationDateTime') < now()) {
             return $this->redirectToGoogleAuthorizationUrl();
         }
+        log::info($request);
+        log::info($request->file);
+        log::info($request->file('file'));
 
-        $uploadedFile = $request->files->get("fileInput"); // リクエストからファイルを取得
-        dd($uploadedFile);
+        $uploadedFile = $request->file('file');
+
+
         if ($uploadedFile) {
             $tempPath = $uploadedFile->store('temp'); // ファイルを一時的に保存
         }
+        log::info('テンプパス'.$tempPath);
 
-        Google::uploadImageToGoogleDrive($tempPath, $request->description);
-        return redirect()->action('GoogleDriveImageController@index');
+        $imageUrl = Google::uploadImageToGoogleDrive($tempPath, $request->description);
+
+        return response()->json(['imageUrl' => $imageUrl]);
     }
 
     private function redirectToGoogleAuthorizationUrl()
