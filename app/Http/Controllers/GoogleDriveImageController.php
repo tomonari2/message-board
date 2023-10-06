@@ -42,7 +42,8 @@ class GoogleDriveImageController extends Controller
         }
         log::info('テンプパス'.$tempPath);
 
-        $imageUrl = Google::uploadImageToGoogleDrive($tempPath, $request->description);
+        $imageId = Google::uploadImageToGoogleDrive($tempPath, $request->description);
+        $imageUrl='https://drive.google.com/uc?id='.$imageId;
 
         return response()->json(['imageUrl' => $imageUrl]);
     }
