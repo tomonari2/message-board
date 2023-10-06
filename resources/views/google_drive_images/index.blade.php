@@ -29,22 +29,22 @@
 
 @push('js')
 <script>
-    $('#fileInput').change(function () {
-    var fileInput = this;
-    var imagePreview = $('#imagePreview')[0]; // 画像表示用のimg要素
+    $('#fileInput').change(function() {
+        var fileInput = this;
+        var imagePreview = $('#imagePreview')[0]; // 画像表示用のimg要素
 
-    if (fileInput.files && fileInput.files[0]) {
-        var reader = new FileReader();
+        if (fileInput.files && fileInput.files[0]) {
+            var reader = new FileReader();
 
-        reader.onload = function (e) {
-            // 読み込んだ画像データをimg要素のsrc属性にセットして表示
-            imagePreview.src = e.target.result;
-        };
+            reader.onload = function(e) {
+                // 読み込んだ画像データをimg要素のsrc属性にセットして表示
+                imagePreview.src = e.target.result;
+            };
 
-        // 選択されたファイルを読み込む
-        reader.readAsDataURL(fileInput.files[0]);
-    }
-});
+            // 選択されたファイルを読み込む
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    });
 
     const $request_form = $('#request_form');
     console.log($request_form);
