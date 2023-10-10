@@ -17,11 +17,15 @@
 
     <h1 class="mt-4">投稿一覧</h1>
 
-    @foreach ($imageList as $imageData)
-    <div id="image_list">
-        <img src="https://drive.google.com/uc?id={{ $imageData['id'] }}" alt="画像">
+    <div class="row">
+        @foreach ($imageList as $imageData)
+        <div class="col-md-4">
+            <div id="image_list">
+                <img src="https://drive.google.com/uc?id={{ $imageData['id'] }}" alt="画像">
+            </div>
+        </div>
+        @endforeach
     </div>
-    @endforeach
 </div>
 @endsection
 
