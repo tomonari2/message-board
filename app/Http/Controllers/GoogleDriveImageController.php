@@ -40,12 +40,19 @@ class GoogleDriveImageController extends Controller
         if ($uploadedFile) {
             $tempPath = $uploadedFile->store('temp'); // ファイルを一時的に保存
         }
-        log::info('テンプパス'.$tempPath);
+        log::info('テンプパス' . $tempPath);
 
         $imageId = Google::uploadImageToGoogleDrive($tempPath, $request->description);
-        $imageUrl='https://drive.google.com/uc?id='.$imageId;
+        $imageUrl = 'https://drive.google.com/uc?id=' . $imageId;
 
         return response()->json(['imageUrl' => $imageUrl]);
+    }
+
+    public function destroy(string $imageId)
+    {
+        Google::deleteImage($imageId);
+
+        return redirect()->action('GoogleDriveImageController@index');
     }
 
     private function redirectToGoogleAuthorizationUrl()

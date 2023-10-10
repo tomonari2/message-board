@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/callback', 'GoogleDriveImageController@handleGoogleCallback')->name('google.callback');
     Route::post('/store', 'GoogleDriveImageController@store')->name('drive.store');
     Route::get('/index', 'GoogleDriveImageController@index')->name('drive.index');
+    Route::delete('/destroy/{imageId}', 'GoogleDriveImageController@destroy')->name('drive.destroy');
 
     Route::post('/vision', 'VisionController@analyzeImage')->name('vision.analyzeImage');
     Route::get('/vision2', 'VisionController@vision2')->name('vision2');

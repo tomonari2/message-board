@@ -41,7 +41,7 @@ class Google
         $carbon->addSeconds($data['expires_in']);
         $expirationDateTime = $carbon->toDateTimeString();
         session(['expirationDateTime' => $expirationDateTime]);
-        
+
         $accessToken = $data['access_token'];
         return $accessToken;
     }
@@ -122,5 +122,20 @@ class Google
         ]);
         $data = json_decode($response->getBody(), true);
         return $data['files'];
+    }
+
+    public function deleteImage(string $imageId){
+        // Google Drive APIの認証情報
+        $headers = [
+            'Authorization' => 'Bearer ' . session('access_token'),
+        ];
+
+        $client = new Client(['base_uri' => config('const.google_api_url')]);
+
+        $response = $client->request('DELETE', 'drive/v3/files/'.$imageId, [
+            'headers' => $headers,
+        ]);
+
+        return;
     }
 }
