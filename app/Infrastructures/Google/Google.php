@@ -46,16 +46,17 @@ class Google
         return $accessToken;
     }
 
-    
+    /**
+     * Googleドライブ・マルチアップロードAPIのリクエスト
+     * 
+     * @param string $tempPath
+     * @param string $description
+     * @return 
+     */
     public function uploadImageToGoogleDrive(string $tempPath, string $description)
     {
         $filePath = storage_path('app/' . $tempPath);
         $mimetype = mime_content_type($filePath);
-
-        $headers = [
-            'Authorization' => 'Bearer ' . session('access_token'),
-            'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-        ];
 
         $fileContents = file_get_contents($filePath);
 
@@ -76,12 +77,15 @@ class Google
             --foo_bar_baz--
             EOF;
 
-        $client = new Client(['base_uri' => config('const.google_api_url')]);
-
-        $response = $client->request('POST', 'upload/drive/v3/files?uploadType=multipart', [
-            'headers' => $headers,
+        $data = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . session('access_token'),
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
             'body' => $body,
-        ]);
+        ];
+
+        $response = $this->requestApi('POST', 'upload/drive/v3/files?uploadType=multipart', $data);
         $data = json_decode($response->getBody(), true);
 
         return $data['id'];
