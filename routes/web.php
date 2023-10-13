@@ -24,6 +24,8 @@ Route::get('/auth/google/callback', 'Auth\LoginController@handleGoogleCallback')
 Route::get('/', 'TopController@index')->name('top');
 
 Route::middleware('auth')->group(function () {
+    Route::get('/news', 'NewsController@index');
+
     Route::resource('posts', 'PostsController');
 
     Route::get('/callback', 'GoogleDriveImageController@handleGoogleCallback')->name('google.callback');
