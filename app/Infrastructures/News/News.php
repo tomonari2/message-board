@@ -19,9 +19,8 @@ class News
             ]
         ];
 
-        $response = $this->requestApi('GET', 'v2/top-headlines', $data);
-        // $data = json_decode($response->getBody(), true);
-        dd($response);
+        $data = $this->requestApi('GET', 'v2/top-headlines', $data);
+        dd($data);
     }
 
     private function requestApi(
@@ -33,14 +32,13 @@ class News
 
         try {
             $response = $client->request($method, $endPoint, $data);
-            dd($response);
-            // $responseBody = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+            $responseBody = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
         } catch (\GuzzleHttp\Exception\GuzzleException | \JsonException $e) {
             Log::info($e->getMessage());
             report($e);
             // throw new ApiRequestFailedException('GoogleドライブAPIのリクエストでエラーが発生しました。');
         }
 
-        // return $responseBody;
+        return $responseBody;
     }
 }
