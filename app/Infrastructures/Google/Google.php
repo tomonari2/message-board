@@ -23,17 +23,17 @@ class Google
 
     public function getGoogleDriveAccessToken(string $code)
     {
-        $client = new Client(['base_uri' => config('const.google_api_url')]);
-
-        $response = $client->request('POST', 'oauth2/v4/token', [
+        $data = [
             'form_params' => [
                 'code' => $code,
                 'client_id' => '659912505482-nadr0n90ju001qgbbkk0775hfv3o9muk.apps.googleusercontent.com',
                 'client_secret' => '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',
                 'redirect_uri' => route('google.callback'),
                 'grant_type' => 'authorization_code',
-            ],
-        ]);
+            ]
+        ];
+
+        $response = $this->requestApi('POST', 'oauth2/v4/token', $data);
 
         // アクセストークンを取得
         $data = json_decode($response->getBody(), true);
@@ -46,27 +46,7 @@ class Google
         return $accessToken;
     }
 
-    // public function getGoogleDriveRefreshToken(string $code)
-    // {
-    //     $client = new Client(['base_uri' => 'https://oauth2.googleapis.com']);
-
-    //     $response = $client->request('POST', 'token', [
-    //         'form_params' => [
-    //             'code' => $code,
-    //             'client_id' => '659912505482-nadr0n90ju001qgbbkk0775hfv3o9muk.apps.googleusercontent.com',
-    //             'client_secret' => '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',
-    //             'redirect_uri' => route('google.callback'),
-    //             'grant_type' => 'authorization_code',
-    //         ],
-    //     ]);
-
-    //     // アクセストークンを取得
-    //     $data = json_decode($response->getBody(), true);
-
-    //     $accessToken = $data['access_token'];
-    //     return $accessToken;
-    // }
-
+    
     public function uploadImageToGoogleDrive(string $tempPath, string $description)
     {
         $filePath = storage_path('app/' . $tempPath);
@@ -109,33 +89,65 @@ class Google
 
     public function searchFiles()
     {
-        $client = new Client(['base_uri' => config('const.google_api_url')]);
+        $folderId = config('const.folder_id');
 
-        $folderId = '1ZKzyMAiEfx7Ispwpd8lYqwhe83jmOi3e';
-
-        $headers = [
-            'Authorization' => 'Bearer ' . session('access_token'),
+        $data = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . session('access_token'),
+            ]
         ];
 
-        $response = $client->request('GET', 'drive/v3/files?q=\'' . $folderId . '\' in parents', [
-            'headers' => $headers,
-        ]);
+        $response = $this->requestApi('GET', 'drive/v3/files?q=\'' . $folderId . '\' in parents', $data);
+
         $data = json_decode($response->getBody(), true);
         return $data['files'];
     }
 
-    public function deleteImage(string $imageId){
+
+    public function deleteImage(string $imageId)
+    {
         // Google Drive APIの認証情報
-        $headers = [
-            'Authorization' => 'Bearer ' . session('access_token'),
+        $data = [
+            'headers' => [
+                'Authorization' => 'Bearer ' . session('access_token'),
+            ]
         ];
 
-        $client = new Client(['base_uri' => config('const.google_api_url')]);
-
-        $response = $client->request('DELETE', 'drive/v3/files/'.$imageId, [
-            'headers' => $headers,
-        ]);
+        $response = $this->requestApi('DELETE',  'drive/v3/files/' . $imageId, $data);
 
         return;
     }
+
+    private function requestApi(
+        string $method,
+        string $endPoint,
+        array $data
+    ) {
+        $client = new Client(['base_uri' => config('const.google_api_url')]);
+
+        $response = $client->request($method, $endPoint, $data);
+
+        return $response;
+    }
+
+    // public function getGoogleDriveRefreshToken(string $code)
+    // {
+    //     $client = new Client(['base_uri' => 'https://oauth2.googleapis.com']);
+
+    //     $response = $client->request('POST', 'token', [
+    //         'form_params' => [
+    //             'code' => $code,
+    //             'client_id' => '659912505482-nadr0n90ju001qgbbkk0775hfv3o9muk.apps.googleusercontent.com',
+    //             'client_secret' => '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',
+    //             'redirect_uri' => route('google.callback'),
+    //             'grant_type' => 'authorization_code',
+    //         ],
+    //     ]);
+
+    //     // アクセストークンを取得
+    //     $data = json_decode($response->getBody(), true);
+
+    //     $accessToken = $data['access_token'];
+    //     return $accessToken;
+    // }
 }

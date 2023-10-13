@@ -26,7 +26,6 @@ class GoogleDriveImageController extends Controller
         $imageList = Google::searchFiles();
 
         $user = $request->user();
-        dd(redirect()->route('drive.index'));
 
         return view('google_drive_images.index', compact('user', 'imageList'));
     }
