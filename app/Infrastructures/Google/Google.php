@@ -2,8 +2,10 @@
 
 namespace App\Infrastructures\Google;
 
+use App\Infrastructures\exceptions\ApiRequestFailedException;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Log;
 
 class Google
 {
@@ -33,10 +35,8 @@ class Google
             ]
         ];
 
-        $response = $this->requestApi('POST', 'oauth2/v4/token', $data);
+        $data = $this->requestApi('POST', 'oauth2/v4/token', $data);
 
-        // アクセストークンを取得
-        $data = json_decode($response->getBody(), true);
         $carbon = new Carbon(now());
         $carbon->addSeconds($data['expires_in']);
         $expirationDateTime = $carbon->toDateTimeString();
@@ -85,8 +85,7 @@ class Google
             'body' => $body,
         ];
 
-        $response = $this->requestApi('POST', 'upload/drive/v3/files?uploadType=multipart', $data);
-        $data = json_decode($response->getBody(), true);
+        $data = $this->requestApi('POST', 'upload/drive/v3/files?uploadType=multipart', $data);
 
         return $data['id'];
     }
@@ -101,9 +100,8 @@ class Google
             ]
         ];
 
-        $response = $this->requestApi('GET', 'drive/v3/files?q=\'' . $folderId . '\' in parents', $data);
+        $data = $this->requestApi('GET', 'drive/v3/files?q=\'' . $folderId . '\' in parents', $data);
 
-        $data = json_decode($response->getBody(), true);
         return $data['files'];
     }
 
@@ -129,29 +127,15 @@ class Google
     ) {
         $client = new Client(['base_uri' => config('const.google_api_url')]);
 
-        $response = $client->request($method, $endPoint, $data);
+        try {
+            $response = $client->request($method, $endPoint, $data);
+            $responseBody = json_decode($response->getBody(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\GuzzleHttp\Exception\GuzzleException | \JsonException $e) {
+            Log::info($e->getMessage());
+            // report($e);
+            throw new ApiRequestFailedException('GoogleドライブAPIのリクエストでエラーが発生しました。');
+        }
 
-        return $response;
+        return $responseBody;
     }
-
-    // public function getGoogleDriveRefreshToken(string $code)
-    // {
-    //     $client = new Client(['base_uri' => 'https://oauth2.googleapis.com']);
-
-    //     $response = $client->request('POST', 'token', [
-    //         'form_params' => [
-    //             'code' => $code,
-    //             'client_id' => '659912505482-nadr0n90ju001qgbbkk0775hfv3o9muk.apps.googleusercontent.com',
-    //             'client_secret' => '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',
-    //             'redirect_uri' => route('google.callback'),
-    //             'grant_type' => 'authorization_code',
-    //         ],
-    //     ]);
-
-    //     // アクセストークンを取得
-    //     $data = json_decode($response->getBody(), true);
-
-    //     $accessToken = $data['access_token'];
-    //     return $accessToken;
-    // }
 }

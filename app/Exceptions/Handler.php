@@ -13,7 +13,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        \App\Infrastructures\exceptions\ApiRequestFailedException::class,
     ];
 
     /**
