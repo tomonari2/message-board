@@ -6,6 +6,7 @@ use App\Infrastructures\exceptions\ApiRequestFailedException;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Log;
+use Storage;
 
 class Google
 {
@@ -85,7 +86,14 @@ class Google
             'body' => $body,
         ];
 
-        $data = $this->requestApi('POST', 'upload/drive/v3/files?uploadType=multipart', $data);
+        try {
+            $data = $this->requestApi('POST', 'upload/drive/v3/files?uploadType=multipart', $data);
+        } catch (ApiRequestFailedException $e) {
+            throw ($e);
+        } finally {
+            //Storage/app/tempディレクトリに保存した画像を削除する
+            Storage::delete($tempPath);
+        }
 
         return $data['id'];
     }
