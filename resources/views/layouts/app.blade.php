@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}"> <!-- CSSファイルを読み込む -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}"> <!-- CSSファイルを読み込む -->
     {{-- {{dd(asset('css/style.css'))}} --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .button-container {
@@ -34,11 +35,14 @@
 </head>
 
 <body>
-    <div class="button-container">
-        <a href="{{ route('drive.index') }}">Googleドライブ</a>
-        <a href="/news">ニュース</a>
-        <a href="{{ route('posts.index') }}">掲示板</a>
-    </div>
+    @if (Auth::check())
+        <div class="button-container">
+            <a href="{{ route('drive.index') }}">Googleドライブ</a>
+            <a href="/news">ニュース</a>
+            <a href="{{ route('posts.index') }}">掲示板</a>
+            <a href="{{ route('github.index') }}">Github</a>
+        </div>
+    @endif
     @yield('content')
     @stack('js')
 </body>

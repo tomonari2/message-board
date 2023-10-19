@@ -9,6 +9,7 @@
                 <div class="card-body">
                     <a href="{{ route('line.login') }}" class="btn btn-primary btn-lg btn-block mb-3">LINEログイン</a>
                     <a href="{{ route('google.login') }}" class="btn btn-danger btn-lg btn-block">Googleログイン</a>
+                    <a href="{{ route('github.login') }}" class="btn btn-danger btn-lg btn-block">GitHubログイン</a>
                 </div>
             </div>
         </div>

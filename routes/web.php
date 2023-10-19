@@ -18,8 +18,12 @@ Route::get('/line_auth', 'LineLoginController@lineLogin')->name('line.login');
 Route::get('/top/line_auth', 'LineLoginController@handleLineCallback')->name('auth.line_callback');
 
 // Googleログイン
-Route::get('/auth/google', 'Auth\LoginController@redirectToGoogle')->name('google.login');
-Route::get('/auth/google/callback', 'Auth\LoginController@handleGoogleCallback')->name('auth.google_callback');
+Route::get('/auth/google', 'Auth\LoginController@redirectToGitHub')->name('google.login');
+Route::get('/auth/google/callback', 'Auth\LoginController@handleGitHubCallback')->name('auth.google_callback');
+
+// GitHubログイン
+Route::get('/auth/github', 'Auth\LoginController@redirectToGitHub')->name('github.login');
+Route::get('/auth/github/callback', 'Auth\LoginController@handleGitHubCallback')->name('auth.github_callback');
 
 Route::get('/', 'TopController@index')->name('top');
 
@@ -37,4 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/vision2', 'VisionController@vision2')->name('vision2');
 
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+
+    Route::get('/github/index', 'GitHubController@index')->name('github.index');
+
 });
