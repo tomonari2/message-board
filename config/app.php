@@ -227,6 +227,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Google' => App\Facades\Google::class,
         'News' => App\Facades\News::class,
+        'GitHub' => App\Facades\GitHub::class,
     ],
 
 ];

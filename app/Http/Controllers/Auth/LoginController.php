@@ -73,9 +73,8 @@ class LoginController extends Controller
     public function handleGitHubCallback()
     {
         $user = Socialite::driver('github')->user();
-        dd($user);
 
-        $user = User::firstOrCreate(['sub' =>  $user->user['sub'], 'name' => $user->name]);
+        $user = User::firstOrCreate(['sub' =>  $user->user['id'], 'name' => $user->nickname]);
 
         Auth::login($user);
         return redirect()->route('posts.index');

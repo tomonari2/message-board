@@ -44,4 +44,5 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/github/index', 'GitHubController@index')->name('github.index');
 
+    Route::get('/user/{username}', 'MyPageController@index')->name('user');
 });
