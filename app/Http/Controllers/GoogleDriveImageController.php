@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\UseCases\GoogleDriveImage\IndexAction;
 use App\UseCases\GoogleDriveImage\StoreAction;
 use Illuminate\Http\Request;
 use Google;
@@ -18,17 +19,15 @@ class GoogleDriveImageController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index(Request $request, IndexAction $action)
     {
         if (!session('access_token') || session('expirationDateTime') < now()) {
             return $this->redirectToGoogleAuthorizationUrl();
         }
 
-        $imageList = Google::searchFiles();
+        $viewParams = $action($request->user());
 
-        $user = $request->user();
-
-        return view('google_drive_images.index', compact('user', 'imageList'));
+        return view($viewParams->view, $viewParams->data);
     }
 
     /**
