@@ -15,4 +15,57 @@
         </div>
     </div>
 </div>
+
+<a data-btn="login" href="/">年齢に答えるだけでログイン</a>
+<div style="display:none" data-modal="age">
+    <div data-age="form">
+        <select>
+            <option value="">年齢</option>
+            @foreach(range(0,70) as $age)
+            <option value="{{$age}}">{{$age}}</option>
+            @endforeach
+        </select>
+        <button type="submit" disabled>OK</button>
+    </div>
+</div>
 @endsection
+
+@push('js')
+<script>
+    $(function() {
+        // 年齢確認モーダル
+        const key = 'is-age-verified';
+        const isAgeVerified = JSON.parse(localStorage.getItem(key) || sessionStorage.getItem(key));
+        const $ageModal = $('[data-modal="age"]');
+        const $loginBtn = $('[data-btn="login"]');
+        const $ageForm = $('[data-modal="age"]');
+        const $ageSelect = $ageForm.find('select');
+        const $ageSubmit = $ageForm.find('button[type="submit"]');
+
+
+        $loginBtn.on('click', function() {
+            if (isAgeVerified === null) {
+                console.log('a');
+                $ageModal.fadeIn();
+                return false;
+            }
+
+        });
+    });
+
+    $ageSubmit.on('click',function(){
+        const isAgeVerified = $ageSelect.val()>= 13;
+
+        registerAgeVerificationResult(isAgeVerified).done(function(){
+            if (isAgeVerified){
+                
+            }
+        })
+
+    });
+
+    function registerAgeVerificationResult(isAgeVerified){
+        return $.post('/verify', {is_age_verified:Number(isAgeVerified)});
+    }
+</script>
+@endpush

@@ -11,7 +11,8 @@
 |
 */
 
-
+// 年齢確認
+Route::match(['get', 'post'], '/verify-age', 'VerifyAge')->name('verify_age');
 
 //LINEログイン
 Route::get('/line_auth', 'LineLoginController@lineLogin')->name('line.login');
