@@ -4,7 +4,7 @@
 <div class="container">
     <h1>ようこそ{{ $user->name }}さん <a href ="{{route('logout')}}" class="btn btn-danger">ログアウト</a></h1>
 
-    {{-- <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('posts.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="form-group">
             <textarea name="content" class="form-control" placeholder="投稿内容"></textarea>
@@ -14,8 +14,8 @@
             <input type="file" name="image" class="form-control-file">
         </div>
         <button type="submit" class="btn btn-primary">投稿</button>
-    </form> --}}
-    <h1>画像をアップロード</h1>
+    </form>
+    {{-- <h1>画像をアップロード</h1>
     <form action="{{ route('drive.store') }}" method="post" enctype="multipart/form-data">
         @csrf
         <label for="file">画像を選択：</label>
@@ -23,7 +23,7 @@
         <label for="description">ファイルの説明：</label>
         <textarea name="description" id="description" rows="4" cols="50"></textarea><br><br>
         <input type="submit" value="アップロード">
-    </form>
+    </form> --}}
 
     <h1 class="mt-4">投稿一覧</h1>
 
