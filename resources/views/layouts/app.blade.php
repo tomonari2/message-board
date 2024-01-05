@@ -40,7 +40,7 @@
     <div class="button-container">
         <a href="{{ route('drive.index') }}">Googleドライブ</a>
         <a href="/news">ニュース</a>
-        <a href="{{ route('posts.index') }}">掲示板</a>
+        <a href="{{ route('posts.index') }}">掲板</a>
         {{-- <a href="{{ route('user',['username'=> $user->name]) }}">Github</a> --}}
     </div>
     @endif
