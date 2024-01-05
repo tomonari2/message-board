@@ -26,6 +26,9 @@ Route::get('/auth/google/callback', 'Auth\LoginController@handleGitHubCallback')
 Route::get('/auth/github', 'Auth\LoginController@redirectToGitHub')->name('github.login');
 Route::get('/auth/github/callback', 'Auth\LoginController@handleGitHubCallback')->name('auth.github_callback');
 
+// Liffログイン
+Route::get('/lifflogin', 'LiffLoginController@login')->name('liff.login');
+
 Route::get('/', 'TopController@index')->name('top');
 
 Route::middleware('auth')->group(function () {
