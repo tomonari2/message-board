@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
+use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Laravel\Socialite\Facades\Socialite;
 
 class LoginController extends Controller
 {
@@ -25,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/posts';
 
     /**
      * Create a new controller instance.
@@ -35,5 +38,51 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+    }
+
+    public function redirectToGoogle()
+    {
+        // すでにユーザーがログイン済みの場合
+        if (Auth::check()) {
+            return redirect()->route('posts.index');
+        }
+
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        $user = Socialite::driver('google')->user();
+
+        $user = User::firstOrCreate(['sub' =>  $user->user['sub'], 'name' => $user->name]);
+
+        Auth::login($user);
+        return redirect()->route('posts.index');
+    }
+
+    public function redirectToGitHub()
+    {
+        // すでにユーザーがログイン済みの場合
+        if (Auth::check()) {
+            return redirect()->route('posts.index');
+        }
+
+        return Socialite::driver('github')->redirect();
+    }
+
+    public function handleGitHubCallback()
+    {
+        $user = Socialite::driver('github')->user();
+
+        $user = User::firstOrCreate(['sub' =>  $user->user['id'], 'name' => $user->nickname]);
+
+        Auth::login($user);
+        return redirect()->route('posts.index');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('top'); // ログアウト後にリダイレクトするページを指定します
     }
 }
