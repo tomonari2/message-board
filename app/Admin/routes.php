@@ -13,5 +13,5 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
     $router->resource('posts', PostController::class);
-
+    $router->resource('users', UserController::class);
 });
